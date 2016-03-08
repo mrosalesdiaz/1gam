@@ -21,7 +21,6 @@ this.Pingu = cc.Node.extend({
       x: (@_currentRect.x * (@_currentRect.width/2))
       y: (@_currentRect.y * (@_currentRect.height) - @_currentRect.height/2 )
       , 20,2
-
     )
     @_sprite.runAction(actionBy)
     return

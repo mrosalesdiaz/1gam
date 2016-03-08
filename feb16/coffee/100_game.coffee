@@ -20,30 +20,31 @@ this.GameScene = cc.Scene.extend({
     @addChild(@pingu)
 
     @_carRandomEngine=new CarRandom([
-        x:2 
+        x:-1 
         y:3
         d:1
       ,
         x:11
         y:4
-        d:2
+        d:-1
       ,
-        x:2 
+        x:-1 
         y:6
         d:1
       ,
         x:11
         y:7
-        d:2
+        d:-1
       ,
-        x:2 
+        x:-1 
         y:9
         d:1
       ,
         x:11
         y:10
-        d:2
-    ]);
+        d:-1
+    ]
+    @tiledMap);
     @addChild(@_carRandomEngine);
 
     @clickHandler.on('click',@pingu.onGoForward,@pingu)

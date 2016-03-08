@@ -4,7 +4,7 @@
   "id": "gameCanvas",
   "renderMode": 1,
   "jsList": [
-    "src/resources.js",
+    "src/resources-compiled.js",
     "src/game-files-compiled.js"
     ]
 }

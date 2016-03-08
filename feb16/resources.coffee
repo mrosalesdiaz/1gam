@@ -8,5 +8,3 @@
   ]
 }
 
-for resId in @res.main
-  console.log(resId)

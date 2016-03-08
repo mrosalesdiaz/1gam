@@ -19,7 +19,7 @@ module.exports = function( grunt ) {
           '../base/controller-one-two-click.coffee'
           ,'coffee/**.coffee' 
           ],
-          'src/resource-compiled.js': [
+          'src/resources-compiled.js': [
             './resources.coffee'    
           ]
         }
