@@ -135,7 +135,7 @@
     kill: function() {
       cc.log('Killed');
       this._controlAuto = true;
-      this._sprite.setTexture('res/car.png');
+      this._sprite.setTexture('res/death.png');
       this.scheduleOnce(function() {
         return this.removeFromParent();
       }, 5);

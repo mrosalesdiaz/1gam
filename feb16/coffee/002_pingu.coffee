@@ -53,7 +53,7 @@ this.Pingu = cc.Node.extend({
   kill: ->
     cc.log('Killed')
     @_controlAuto=true
-    @_sprite.setTexture('res/car.png')
+    @_sprite.setTexture('res/death.png')
     @scheduleOnce(
       ()->
         @removeFromParent()
