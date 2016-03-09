@@ -117,5 +117,7 @@ this.CarRandom = cc.Node.extend({
     )
   _death:(pingu)->
     cc.log("Death")
-
+  test:(pinguBox)->
+    return true  for item in this.getChildren() when (item.getTag() is TAG_CAR_LEFT or item.getTag() is TAG_CAR_RIGHT) and  cc.rectIntersectsRect(pinguBox, item.getBoundingBox()) by -1
+    false
 })

@@ -3,7 +3,8 @@ this.Pingu = cc.Node.extend({
   _currentRect:null
   _sprite: null
   _limitTop: 12
-  _limitBottom: 2
+  _limitBottom: 4
+  _controlAuto:false
   ctor: (x,y,tiledMap)->
     @_super();
     @_initialPosition=cc.p(x,y)
@@ -33,11 +34,15 @@ this.Pingu = cc.Node.extend({
     @addChild(@_sprite)
     return
   onGoForward: (_evt)->
-    return if @_currentRect.y+1 > @_limitTop
+    return if @_controlAuto
+    if @_currentRect.y+1 > @_limitTop
+      @_controlAuto=true
+      return
     @_currentRect.y+=1
     @_updatePosition()
     return
   onGoBackward: (_evt)->
+    return if @_controlAuto
     return if @_currentRect.y-1 < @_limitBottom
     @_currentRect.y-=1
     @_updatePosition()
@@ -45,5 +50,15 @@ this.Pingu = cc.Node.extend({
   # PUBLIC METHODS
   onEnter: () ->
     @_super();
-    
+  kill: ->
+    cc.log('Killed')
+    @_controlAuto=true
+    @_sprite.setTexture('res/car.png')
+    @scheduleOnce(
+      ()->
+        @removeFromParent()
+      5
+    )
+    return
+
 })

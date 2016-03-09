@@ -79,7 +79,8 @@
     _currentRect: null,
     _sprite: null,
     _limitTop: 12,
-    _limitBottom: 2,
+    _limitBottom: 4,
+    _controlAuto: false,
     ctor: function(x, y, tiledMap) {
       this._super();
       this._initialPosition = cc.p(x, y);
@@ -108,13 +109,20 @@
       this.addChild(this._sprite);
     },
     onGoForward: function(_evt) {
+      if (this._controlAuto) {
+        return;
+      }
       if (this._currentRect.y + 1 > this._limitTop) {
+        this._controlAuto = true;
         return;
       }
       this._currentRect.y += 1;
       this._updatePosition();
     },
     onGoBackward: function(_evt) {
+      if (this._controlAuto) {
+        return;
+      }
       if (this._currentRect.y - 1 < this._limitBottom) {
         return;
       }
@@ -123,6 +131,14 @@
     },
     onEnter: function() {
       return this._super();
+    },
+    kill: function() {
+      cc.log('Killed');
+      this._controlAuto = true;
+      this._sprite.setTexture('res/car.png');
+      this.scheduleOnce(function() {
+        return this.removeFromParent();
+      }, 5);
     }
   });
 
@@ -268,29 +284,54 @@
     },
     _death: function(pingu) {
       return cc.log("Death");
+    },
+    test: function(pinguBox) {
+      var item, j, ref;
+      ref = this.getChildren();
+      for (j = ref.length - 1; j >= 0; j += -1) {
+        item = ref[j];
+        if ((item.getTag() === TAG_CAR_LEFT || item.getTag() === TAG_CAR_RIGHT) && cc.rectIntersectsRect(pinguBox, item.getBoundingBox())) {
+          return true;
+        }
+      }
+      return false;
     }
   });
 
 }).call(this);
 
 (function() {
+  var TAG_PINGU, i;
+
+  i = 2000;
+
+  TAG_PINGU = ++i;
+
   this.GameScene = cc.Scene.extend({
     targetFrame: 15 / 60,
     realDeltaTime: 0,
     _positions: [],
     _stage: null,
     _carRandomEngine: null,
+    _isStarted: false,
+    _finishLine: null,
+    _startOverlay: null,
     ctor: function() {
-      return this._super();
+      this._super();
+      return this._finishLine = cc.rect({
+        x: 0,
+        y: 12,
+        width: 10,
+        height: 3
+      });
     },
     onEnter: function() {
+      var startText, winSize;
       this._super();
       this.clickHandler = new OneTwoClickScene();
       this.addChild(this.clickHandler);
       this.tiledMap = cc.TMXTiledMap.create('res/stage.tmx');
       this.addChild(this.tiledMap);
-      this.pingu = new Pingu(1, 2, this.tiledMap);
-      this.addChild(this.pingu);
       this._carRandomEngine = new CarRandom([
         {
           x: -1,
@@ -319,14 +360,73 @@
         }
       ], this.tiledMap);
       this.addChild(this._carRandomEngine);
-      this.clickHandler.on('click', this.pingu.onGoForward, this.pingu);
-      this.clickHandler.on('dbclick', this.pingu.onGoBackward, this.pingu);
+      this.clickHandler.on('click', this._onOneClick, this);
+      this.clickHandler.on('dbclick', this._onDoubleClick, this);
+      this.schedule(this._testCollision);
+      this._startOverlay = cc.LayerColor.create(new cc.Color(200, 100, 100, 100));
+      startText = cc.LabelTTF.create("Start");
+      startText.setAnchorPoint(.5, .5);
+      winSize = cc.director.getWinSize();
+      startText.setPosition(winSize.width / 2, winSize.height / 2);
+      startText.setFontSize(80);
+      this._startOverlay.addChild(startText);
+      this.addChild(this._startOverlay);
     },
-    _moveFordward: function() {
-      return console.log('test');
+    startGame: function() {
+      cc.log('===========');
+      cc.log('Start Game');
+      cc.log('===========');
+      return this._addPingus(cc.p(2, 2));
     },
-    _moveBackward: function() {
-      return console.log('test');
+    _onOneClick: function() {
+      var j, pingu, ref;
+      cc.log('oneClick');
+      if (this._isStarted) {
+        ref = this.getChildren();
+        for (j = ref.length - 1; j >= 0; j += -1) {
+          pingu = ref[j];
+          if (pingu.getTag() === TAG_PINGU) {
+            pingu.onGoForward.bind(pingu)();
+          }
+        }
+      } else {
+        this._startOverlay.setVisible(false);
+        this._isStarted = true;
+        this.startGame();
+      }
+    },
+    _onDoubleClick: function() {
+      var j, pingu, ref;
+      ref = this.getChildren();
+      for (j = ref.length - 1; j >= 0; j += -1) {
+        pingu = ref[j];
+        if (pingu.getTag() === TAG_PINGU) {
+          pingu.onGoBackward.bind(pingu)();
+        }
+      }
+    },
+    _addPingus: function(p) {
+      var pingu;
+      pingu = new Pingu(p.x, p.y, this.tiledMap);
+      pingu.setTag(TAG_PINGU);
+      return this.addChild(pingu);
+    },
+    _testCollision: function() {
+      var j, pingu, ref;
+      ref = this.getChildren();
+      for (j = ref.length - 1; j >= 0; j += -1) {
+        pingu = ref[j];
+        if (pingu.getTag() === TAG_PINGU) {
+          this._isCarHit(pingu);
+        }
+      }
+    },
+    _isCarHit: function(pingu) {
+      if (this._carRandomEngine.test(pingu._sprite.getBoundingBox())) {
+        if (!pingu._controlAuto) {
+          return pingu.kill();
+        }
+      }
     }
   });
 
