@@ -4,10 +4,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h5 class="modal-title" id="myModalLabel">$  {name}</h5>
+          <h2 class="modal-title" data-dojo-attach-point="__name"></h2>
         </div>
         <div class="modal-body">
-          game loads here
+          <div class="row">
+            <div class="col-xs-12">
+              <iframe style="display:block; width:100%;" frameborder="0" data-dojo-attach-point="__gameframe" src="google.com"></iframe>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">goood</button>

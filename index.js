@@ -12,11 +12,12 @@ define(
     , "dijit/_TemplatedMixin"
     , "dojo/text!web-data.json"
     , "dojo/json"
+    , "dojo/topic"
     // no param
     , "dojo/NodeList-dom"
     , "dojo/NodeList-html"
      ],
-  function( declare, lang, array, query, on, Evented, _WidgetBase, _WidgetsInTemplateMixin, _AttachMixin, _TemplatedMixin, webData, json ) {
+  function( declare, lang, array, query, on, Evented, _WidgetBase, _WidgetsInTemplateMixin, _AttachMixin, _TemplatedMixin, webData, json, topic ) {
     webData = json.parse( webData );
     /*
      * Page Controller Widget
@@ -41,9 +42,15 @@ define(
      */
     declare( "GameThumbnail", [ _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented ], {
       templatePath: "./templates/template_game.html",
+      gameData: null,
       constructor: function( gameData ) {
-        dojo.safeMixin( this, gameData )
+        dojo.safeMixin( this, {
+          gameData: gameData || {}
+        } );
         this.inherited( arguments );
+      },
+      onPlay: function() {
+        topic.publish( "topic/game/opened", lang.clone( this.gameData ) );
       }
     } );
     /*
@@ -51,5 +58,14 @@ define(
      */
     declare( "GameModal", [ _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented ], {
       templatePath: "./templates/template_game_modal.html",
+      buildRendering: function() {
+        this.inherited( arguments );
+        topic.subscribe( "topic/game/opened", lang.hitch( this, this._openGameModal ) );
+      },
+      _openGameModal: function( data ) {
+        this.__gameframe.src = data.folder + "/index.html";
+        this.__name.innerText = data.name;
+        $( "#__gamemodal" ).modal( 'show' );
+      }
     } );
   } );
