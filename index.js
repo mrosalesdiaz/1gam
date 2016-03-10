@@ -10,7 +10,7 @@ define(
     , "dijit/_WidgetsInTemplateMixin"
     , "dijit/_AttachMixin"
     , "dijit/_TemplatedMixin"
-    , "dojo/text!web-data.json"
+    , "dojo/text!webapp/web-data.json"
     , "dojo/json"
     , "dojo/topic"
     // no param
