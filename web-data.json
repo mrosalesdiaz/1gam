@@ -1,8 +1,10 @@
 [
   {
     "name": "test",
+    "image":"http://lorempixel.com/128/128/people/",
     "folder": "games/022016",
     "gitHubUrl": "",
+    "soundCloud": "",
     "facebook": "",
     "twiter": "",
     "1gam": ""

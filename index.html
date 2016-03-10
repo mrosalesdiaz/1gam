@@ -36,17 +36,12 @@
   </div>
 </div>
 <div class="container">
-  <div class="row">
-<div data-dojo-type="dosjox.dtl.Inline" id="inline" data-dojo-props="context:{items: ['apple', 'banana', 'orange']}">
-  <ul>
-    {% for item in items %}
-      <li>undefined</li>
-    {% endfor %}
-  </ul>
-</div>
+  <div id="__gamegrid" class="row">
+    <div class="col-xs-12 text-center">Loading...</div>
   </div>
 </div>
-<!--div data-dojo-type="PageController"></div-->
+<div data-dojo-type="PageController"></div>
+<div data-dojo-type="GameModal"></div>
 <script type="text/javascript">
 var dojoConfig={
   baseUrl: './',
@@ -59,9 +54,7 @@ var dojoConfig={
 </script>
 <script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
 <script type="text/javascript">
-require(['dojox/dtl/Inline','webapp/index','dojo/domReady!'],function  (argument) {
-  console.log(argument)
-});
+require(['webapp/index','dojo/domReady!']);
 </script>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
